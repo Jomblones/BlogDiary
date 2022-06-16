@@ -1,7 +1,18 @@
 {% extends 'base.html' %}
 
 {% block content %}
+
+{% for message in get_flashed_messages() %}
+
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+
+        {{ message }}
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+{% endfor %}
+
 <div class="container">
+
     {% if name %}
         <h1>Hello {{ name }} </h1>
     {% else %}
@@ -12,9 +23,10 @@
             {{ form.name.label(class="col-form-label") }}
             {{ form.name(class="form-control") }}
             <br>
-            {{ form.submit(class="btn btn-primary") }}
+            {{ form.submit(class="btn btn-secondary") }}
         </form>
 
     {% endif %}
+
 </div>
 {% endblock %}
