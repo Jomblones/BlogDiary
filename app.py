@@ -1,4 +1,7 @@
 from flask import Flask, redirect, render_template, url_for
+from flask_wtf import FlaskForm
+from wtforms import StringField, SubmitField
+from wtforms.validators import DataRequired
 
 app = Flask(__name__, template_folder='templates')
 
@@ -17,3 +20,6 @@ def about():
 @app.route('/profile')
 def profile():
     return render_template("profile.html")
+
+if __name__ == "__main__":
+    app.run(debug=True);
