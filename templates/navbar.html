@@ -15,9 +15,13 @@
             <li class="nav-item">
                 <a class="nav-link" id="profile" href="{{ url_for('profile') }}">Profile</a>
             </li>
+            <!-- <li class="nav-item">
+                <a class="nav-link" id="name" href="#">Name</a>
+            </li>  -->
             <li class="nav-item">
-                <a class="nav-link" id="name" href="{{ url_for('name') }}">Name</a>
+              <a class="nav-link" id="add_user" href="{{ url_for('add_user') }}">Add User</a>
             </li>
+
         </ul>
         <form class="d-flex" role="search">
           <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -26,7 +30,7 @@
       </div>
     </div>
   </nav>
-  <script src=""{{ url_for('static', filename="script.js") }}"></script>
+  
 
  
 
