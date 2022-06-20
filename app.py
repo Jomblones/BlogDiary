@@ -1,9 +1,10 @@
 from datetime import datetime
-from flask import Flask, flash, redirect, render_template, request, url_for
+from flask import Flask, flash, redirect, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
+from wtforms.widgets import TextArea
 
 #Flask Instance
 app = Flask(__name__, template_folder='templates')
@@ -26,6 +27,22 @@ class Users(db.Model):
     def __repr__(self) :
         return  '<Name %r>' % self.name
 
+#Blog Post Model
+class Posts(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    title = db.Column(db.String(255))
+    content = db.Column(db.Text)
+    author = db.Column(db.String(255))
+    date_posted = db.Column(db.DateTime, default=datetime.utcnow)
+    slug = db.Column(db.String(255))
+
+#Class Posts Form
+class PostForm(FlaskForm):
+    title = StringField("Title", validators=[DataRequired()])
+    content = StringField("Content", validators=[DataRequired()], widget=TextArea())
+    author =StringField("Author", validators=[DataRequired()])
+    slug =StringField("Slug", validators=[DataRequired()])
+    submit = SubmitField("Submit")
 
 #Class userForm
 class UserForm(FlaskForm):
@@ -59,8 +76,8 @@ def profile():
 @app.route('/user/add', methods=['GET','POST'])
 def add_user():
     name = None
- 
     form = UserForm()
+    
     #Validate Form
     if form.validate_on_submit():
         user = Users.query.filter_by(email=form.email.data).first()
@@ -79,6 +96,7 @@ def add_user():
                            name = name,
                            our_users = our_users
                            )
+
 
 # @app.route('/name',methods=['GET','POST'])
 # def name():
@@ -118,11 +136,118 @@ def update(id):
     else:
         return render_template("update.html",
                                    form=form,
-                                   name_to_update = name_to_update)
+                                   name_to_update = name_to_update,
+                                   id=id)
             
 @app.route('/delete/<int:id>', methods=['GET','POST'])
 def delete(id):
-    pass
+    user_to_delete = Users.query.get_or_404(id)
+    name = None
+    form = UserForm()
+    
+    try : 
+        db.session.delete(user_to_delete)
+        db.session.commit()
+        flash("User Deleted Successfully!")
+        our_users = Users.query.order_by(Users.date_added)
+        return render_template("add_user.html",form = form,name = name,our_users = our_users)
+
+    except:
+        flash("User not found")
+        return render_template("add_user.html", form = form,name = name,our_users = our_users)
+   
+# CRUD BLOG  
+@app.route('/add-post', methods=['GET','POST'])
+def add_post():
+    form = PostForm()
+    
+    if form.validate_on_submit():
+        post = Posts(title=form.title.data, 
+                     content=form.content.data, 
+                     author=form.author.data, 
+                     slug=form.slug.data
+                     )
+        
+        #Clear the form
+        form.title.data = ''
+        form.content.data = ''
+        form.author.data = ''
+        form.slug.data = ''
+        
+        #add post data to database
+        db.session.add(post)
+        db.session.commit()
+        
+        #Return message
+        flash("Blog Post Submitted Successfully")
+
+    #Redirect
+    return render_template("add_post.html", form=form)
+
+@app.route('/posts')
+def posts():
+    
+    #all the posts from DB
+    posts = Posts.query.order_by(Posts.date_posted)
+    
+    return render_template("posts.html", posts=posts)
+    
+@app.route('/posts/<int:id>')
+def post(id):
+    post = Posts.query.get_or_404(id)
+    return render_template("post.html",post=post)
+
+@app.route('/posts/edit/<int:id>', methods=['GET','POST'])
+def edit_post(id):
+    post = Posts.query.get_or_404(id)
+    form = PostForm()
+    if form.validate_on_submit():
+        post.title = form.title.data
+        post.author = form.author.data
+        post.slug = form.slug.data
+        post.content = form.content.data
+        
+        #Update to DB
+        db.session.add(post)
+        db.session.commit()
+        
+        #message
+        flash("Post Updated")
+        return redirect(url_for('post', id=post.id))
+    
+    form.title.data = post.title
+    form.author.data = post.author
+    form.slug.data = post.slug
+    form.content.data = post.content
+    
+    return render_template("edit_post.html", form=form)
+
+@app.route('/posts/delete/<int:id>')
+def delete_post(id):
+    post_to_delete = Posts.query.get_or_404(id)
+    
+    try:
+        db.session.delete(post_to_delete)
+        db.session.commit()
+        
+        #Flash message
+        flash("Post Deleted") 
+        
+        #Grab All posts
+        posts = Posts.query.order_by(Posts.date_posted)        
+        return render_template("posts.html", posts=posts)        
+    
+    except:
+        #Error message
+        flash("Problem Deleting Post")
+        
+        #Grab All posts
+        posts = Posts.query.order_by(Posts.date_posted)        
+        return render_template("posts.html", posts=posts)      
+
+@app.errorhandler(404)
+def page_not_found(e):
+    return render_template("404.html")
 
 if __name__ == "__main__":
     app.run(debug=True);
