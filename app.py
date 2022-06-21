@@ -5,6 +5,7 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from wtforms.widgets import TextArea
+from flask_migrate import Migrate
 import os
 
 #Flask Instance
@@ -12,12 +13,16 @@ app = Flask(__name__, template_folder='templates')
 
 #Add database
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://vkjjayogzuwamw:a9549d1e56c18f42d00a4cdc916720b58131d90f43ee5b9f9572e3b739bd63cf@ec2-34-200-35-222.compute-1.amazonaws.com:5432/dd6mnv6lr344gc'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://vkjjayogzuwamw:a9549d1e56c18f42d00a4cdc916720b58131d90f43ee5b9f9572e3b739bd63cf@ec2-34-200-35-222.compute-1.amazonaws.com:5432/dd6mnv6lr344gc'
 
 #Secret Key
 app.config['SECRET_KEY'] = "qwertyuiop"
+
 #Initialize database
 db = SQLAlchemy(app)
+
+#db migration
+migrate = Migrate(app,db) 
 
 #Create Model
 class Users(db.Model):
