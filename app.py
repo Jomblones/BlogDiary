@@ -5,13 +5,14 @@ from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField
 from wtforms.validators import DataRequired
 from wtforms.widgets import TextArea
+import os
 
 #Flask Instance
 app = Flask(__name__, template_folder='templates')
 
 #Add database
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://ibvugmotqnadnj:33447e7a1dc2977068d43067569d5fdba6015db958bf3541b28b6efd7c13fbc7@ec2-18-204-142-254.compute-1.amazonaws.com:5432/dck2lk0qrvcf90'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://ibvugmotqnadnj:33447e7a1dc2977068d43067569d5fdba6015db958bf3541b28b6efd7c13fbc7@ec2-18-204-142-254.compute-1.amazonaws.com:5432/dck2lk0qrvcf90'
 
 #Secret Key
 app.config['SECRET_KEY'] = "qwertyuiop"
