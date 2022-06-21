@@ -13,7 +13,7 @@ app = Flask(__name__, template_folder='templates')
 
 #Add database
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgres://uyuozckgxinllx:fdeeed898474fb989519bd58ebef745c64400e122ef4b7563742786ae9a8bd30@ec2-3-224-164-189.compute-1.amazonaws.com:5432/d6372ho6i6ii9u'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://uyuozckgxinllx:fdeeed898474fb989519bd58ebef745c64400e122ef4b7563742786ae9a8bd30@ec2-3-224-164-189.compute-1.amazonaws.com:5432/d6372ho6i6ii9u'
 
 #Secret Key
 app.config['SECRET_KEY'] = "qwertyuiop"
