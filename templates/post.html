@@ -16,17 +16,24 @@
 <br>
 
 <div class="shadow p-3 mb-5 bg-body rounded">
-    <h2>{{ post.title }}</h2> 
-    <hr>
-    By : {{ post.author }}<br>
-    <small> Uploaded : {{ post.date_posted }}</small><br><br>
-    {{ post.content }}<br>
+    <div class="text-container">
+        <h2>{{ post.title }}</h2> 
+        <hr>
+        By : {{ post.author }}<br>
+        <small> Uploaded : {{ post.date_posted }}</small><br><br>
+        <div class="item" 
+        style="">
+            <pre style="white-space:pre-wrap;"> {{ post.content }}</pre>
+            <br>
+        </div>
+        <br>
+    </div>
 
+    
+    <a href="{{ url_for('posts') }}" class="btn btn-outline-primary">Back</a>
+    <a class="btn btn-outline-secondary" href="{{ url_for('edit_post', id=post.id) }} ">Edit Post</a>
+    <a class="btn btn-outline-danger" href="{{ url_for('delete_post', id=post.id) }} ">Delete Post</a>
 </div>
-
-<a href="{{ url_for('posts') }}" class="btn btn-outline-primary">Back</a>
-<a class="btn btn-outline-secondary" href="{{ url_for('edit_post', id=post.id) }} ">Edit Post</a>
-<a class="btn btn-outline-danger" href="{{ url_for('delete_post', id=post.id) }} ">Delete Post</a>
 
 
 {% endblock %}
