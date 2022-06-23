@@ -7,23 +7,23 @@
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav me-auto mb-2 mb-lg-0">
             <li class="nav-item">
-                <a class="nav-link active" id="home" aria-current="page"  href=" {{ url_for('home') }} ">Home</a>
+                <a class="nav-link {% if menu=="home" %} active {% endif %} " id="home" aria-current="page"  href=" {{ url_for('home') }} ">Home</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="about" href="{{ url_for('about') }}">About</a>
+                <a class="nav-link {% if menu=="about" %} active {% endif %}" id="about" href="{{ url_for('about') }}">About</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" id="profile" href="{{ url_for('profile') }}">Profile</a>
+                <a class="nav-link {% if menu=="profile" %} active {% endif %} " id="profile" href="{{ url_for('profile') }}">Profile</a>
             </li>
             
             <li class="nav-item">
-              <a class="nav-link" id="add_user" href="{{ url_for('add_user') }}">Add User</a>
+              <a class="nav-link {% if menu=="add_user" %} active {% endif %} " id="add_user" href="{{ url_for('add_user') }}">Add User</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="add_post" href="{{ url_for('add_post') }}">Add Posts</a>
+              <a class="nav-link {% if menu=="add_post" %} active {% endif %} " id="add_post" href="{{ url_for('add_post') }}">Add Posts</a>
             </li>
             <li class="nav-item">
-              <a class="nav-link" id="blog_post" href="{{ url_for('posts') }}">Blog Posts</a>
+              <a class="nav-link {% if menu=="posts" %} active {% endif %} " id="blog_post" href="{{ url_for('posts') }}">Blog Posts</a>
             </li>
 
         </ul>

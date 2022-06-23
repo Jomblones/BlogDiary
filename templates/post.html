@@ -16,13 +16,15 @@
 <br>
 
 <div class="shadow p-3 mb-5 bg-body rounded">
-    <div class="text-container">
+    <div class="text-container" >
         <h2>{{ post.title }}</h2> 
         <hr>
         By : {{ post.author }}<br>
         <small> Uploaded : {{ post.date_posted }}</small><br><br>
         <div class="item" >
-            <pre style="white-space:pre-wrap;"> {{ post.content }}</pre>
+            <pre style="white-space:pre-wrap;
+            font-family: 'Poppins', sans-serif;
+            font-size:100%"> {{ post.content }}</pre>
             <br>
         </div>
         <br>

@@ -12,7 +12,11 @@ import os
 app = Flask(__name__, template_folder='templates')
 
 #Add database
+
+# LOCAL DATABASE
 # app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///users.db'
+
+# PostgreSQL HEROKU m.farhanshihab11@gmail.com - diaryblog2112
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://uyuozckgxinllx:fdeeed898474fb989519bd58ebef745c64400e122ef4b7563742786ae9a8bd30@ec2-3-224-164-189.compute-1.amazonaws.com:5432/d6372ho6i6ii9u'
 
 #Secret Key
@@ -65,23 +69,24 @@ class NameForm(FlaskForm):
     # email = StringField("Insert Your Email", validators=[DataRequired()])
     submit = SubmitField("Submit")
     
+# HOMEPAGE
 @app.route('/')
-def toHome():
-    return redirect(url_for('home'))
-
 @app.route('/home')
 def home():
-    return render_template("home.html")
+    return render_template("home.html", menu="home")
 
+# ABOUT PAGE
 @app.route('/about')
 def about():
-    return render_template("about.html")
+    return render_template("about.html", menu="about")
 
+# USER PROFILE PAGE
 @app.route('/profile')
 def profile():
-    return render_template("profile.html")
+    return render_template("profile.html",  menu="profile")
 
-@app.route('/user/add', methods=['GET','POST'])
+# ADD USER
+@app.route('/user/add' ,methods=['GET','POST'])
 def add_user():
     name = None
     form = UserForm()
@@ -102,7 +107,8 @@ def add_user():
     return render_template("add_user.html",
                            form = form,
                            name = name,
-                           our_users = our_users
+                           our_users = our_users,
+                           menu="add_user"
                            )
 
 
@@ -165,6 +171,7 @@ def delete(id):
         return render_template("add_user.html", form = form,name = name,our_users = our_users)
    
 # CRUD BLOG  
+#Create
 @app.route('/add-post', methods=['GET','POST'])
 def add_post():
     form = PostForm()
@@ -190,21 +197,23 @@ def add_post():
         flash("Blog Post Submitted Successfully")
 
     #Redirect
-    return render_template("add_post.html", form=form)
+    return render_template("add_post.html", form=form, menu="add_post")
 
+#Read many posts
 @app.route('/posts')
 def posts():
     
     #all the posts from DB
     posts = Posts.query.order_by(Posts.date_posted)
-    
-    return render_template("posts.html", posts=posts)
-    
+    return render_template("posts.html", posts=posts, menu="posts")
+
+#Read one post
 @app.route('/posts/<int:id>')
 def post(id):
     post = Posts.query.get_or_404(id)
-    return render_template("post.html",post=post)
+    return render_template("post.html",post=post, menu="posts")
 
+#Update
 @app.route('/posts/edit/<int:id>', methods=['GET','POST'])
 def edit_post(id):
     post = Posts.query.get_or_404(id)
@@ -230,6 +239,7 @@ def edit_post(id):
     
     return render_template("edit_post.html", form=form)
 
+#Delete
 @app.route('/posts/delete/<int:id>')
 def delete_post(id):
     post_to_delete = Posts.query.get_or_404(id)
@@ -256,6 +266,10 @@ def delete_post(id):
 @app.errorhandler(404)
 def page_not_found(e):
     return render_template("404.html")
+
+@app.errorhandler(505)
+def internal_server_error(e):
+    return render_template("505.html")
 
 if __name__ == "__main__":
     app.run(debug=True);
